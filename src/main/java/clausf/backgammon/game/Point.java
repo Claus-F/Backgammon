@@ -16,7 +16,7 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package clausf.backgammon.game;
 
-public class Point {
+public class Point implements Comparable<Point> {
 
 	private int position;
 	private Player player;
@@ -39,6 +39,16 @@ public class Point {
 
 	public int getStones() {
 		return stones;
+	}
+
+	@Override
+	public int compareTo(Point o) {
+		return -Integer.valueOf(position).compareTo(o.getPosition());
+	}
+
+	@Override
+	public String toString() {
+		return "Point: " + position + " " + player + " " + stones;
 	}
 
 }

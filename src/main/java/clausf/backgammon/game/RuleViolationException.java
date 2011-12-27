@@ -16,61 +16,24 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package clausf.backgammon.game;
 
-public class Move implements Comparable<Move> {
+public class RuleViolationException extends Exception {
 
-	private int from;
-	private int to;
+	private static final long serialVersionUID = 3516949907969954892L;
 
-	public Move(int from, int to) {
+	public RuleViolationException() {
 		super();
-		this.from = from;
-		this.to = to;
 	}
 
-	public int getFrom() {
-		return from;
+	public RuleViolationException(String message) {
+		super(message);
 	}
 
-	public int getTo() {
-		return to;
+	public RuleViolationException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	@Override
-	public int compareTo(Move other) {
-		if (this.from > other.from)
-			return -1;
-		if (this.from < other.from)
-			return 1;
-		if (this.to > other.to)
-			return -1;
-		if (this.to < other.to)
-			return 1;
-		return 0;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + from;
-		result = prime * result + to;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Move other = (Move) obj;
-		if (from != other.from)
-			return false;
-		if (to != other.to)
-			return false;
-		return true;
+	public RuleViolationException(Throwable cause) {
+		super(cause);
 	}
 
 }

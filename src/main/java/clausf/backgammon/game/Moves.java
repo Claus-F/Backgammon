@@ -16,44 +16,36 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package clausf.backgammon.game;
 
-public class Move implements Comparable<Move> {
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
-	private int from;
-	private int to;
+public class Moves {
 
-	public Move(int from, int to) {
+	private Map<Move, Integer> moves = new TreeMap<Move, Integer>();
+
+	public Moves() {
 		super();
-		this.from = from;
-		this.to = to;
 	}
 
-	public int getFrom() {
-		return from;
+	public void addMove(Move move) {
+		if (moves.get(move) == null) {
+			moves.put(move, 1);
+		}
+		else {
+			moves.put(move, moves.get(move) + 1);
+		}
 	}
 
-	public int getTo() {
-		return to;
-	}
-
-	@Override
-	public int compareTo(Move other) {
-		if (this.from > other.from)
-			return -1;
-		if (this.from < other.from)
-			return 1;
-		if (this.to > other.to)
-			return -1;
-		if (this.to < other.to)
-			return 1;
-		return 0;
+	public Map<Move, Integer> getMoves() {
+		return moves;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + from;
-		result = prime * result + to;
+		result = prime * result + ((moves == null) ? 0 : moves.hashCode());
 		return result;
 	}
 
@@ -65,12 +57,29 @@ public class Move implements Comparable<Move> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Move other = (Move) obj;
-		if (from != other.from)
-			return false;
-		if (to != other.to)
+		Moves other = (Moves) obj;
+		if (moves == null) {
+			if (other.moves != null)
+				return false;
+		} else if (!moves.equals(other.moves))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder buffer = new StringBuilder("Moves:");
+
+		for (Entry<Move, Integer> entry : moves.entrySet()) {
+			buffer.append(" ");
+			buffer.append(entry.getKey().getFrom());
+			buffer.append("/");
+			buffer.append(entry.getKey().getTo());
+			if (entry.getValue() > 1)
+				buffer.append("(").append(entry.getValue()).append(")");
+		}
+
+		return buffer.toString();
 	}
 
 }

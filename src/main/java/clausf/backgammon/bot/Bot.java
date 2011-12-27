@@ -17,10 +17,10 @@
 package clausf.backgammon.bot;
 
 import clausf.backgammon.game.Game;
-import clausf.backgammon.game.Move;
+import clausf.backgammon.game.Moves;
 
 public interface Bot {
 
-	public Move makeMove(Game game);
+	public Moves makeMove(Game game);
 
 }

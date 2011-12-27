@@ -18,12 +18,12 @@ package clausf.backgammon.bots.dummy;
 
 import clausf.backgammon.bot.Bot;
 import clausf.backgammon.game.Game;
-import clausf.backgammon.game.Move;
+import clausf.backgammon.game.Moves;
 
 public class DummyBot implements Bot {
 
 	@Override
-	public Move makeMove(Game game) {
+	public Moves makeMove(Game game) {
 		// TODO Auto-generated method stub
 		return null;
 	}
