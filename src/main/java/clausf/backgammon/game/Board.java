@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Board {
 
@@ -47,6 +48,12 @@ public class Board {
 		board.put(Player.BLACK, black);
 	}
 
+	public Board(List<Point> white, List<Point> black) {
+		board = new HashMap<Player, List<Point>>();
+		board.put(Player.WHITE, white);
+		board.put(Player.BLACK, black);
+	}
+
 	public List<Point> getPlayer(Player player) {
 		return board.get(player);
 	}
@@ -56,11 +63,37 @@ public class Board {
 			if (point.getPosition() == position)
 				return point;
 		}
+		if (position == OFF || position == BAR)
+			return null;
 		for (Point point : board.get(player.opponent())) {
 			if (point.getPosition() == (25 - position))
 				return point;
 		}
 		return null;
+	}
+
+	public Point getOff(Player player) {
+		List<Point> points = getPlayer(player);
+		Point point = points.get(points.size() - 1);
+		if (point.getPosition() == OFF)
+			return point;
+		return null;
+	}
+
+	public Point getBar(Player player) {
+		List<Point> points = getPlayer(player);
+		Point point = points.get(0);
+		if (point.getPosition() == BAR)
+			return point;
+		return null;
+	}
+
+	public void move(Player player, Moves moves) throws RuleViolationException {
+		for (Entry<Move, Integer> entry : moves.getMoves().entrySet()) {
+			for (int i = 0; i < entry.getValue(); i++) {
+				move(player, entry.getKey());
+			}
+		}
 	}
 
 	public void move(Player player, Move move) throws RuleViolationException {
@@ -85,7 +118,7 @@ public class Board {
 		}
 		else if (to.getPlayer() == player) {
 			points.remove(to);
-			Point newTo = new Point(to.getPosition(), to.getPlayer(), from.getStones() + 1);
+			Point newTo = new Point(to.getPosition(), to.getPlayer(), to.getStones() + 1);
 			points.add(newTo);
 		}
 		else {
@@ -108,6 +141,42 @@ public class Board {
 		}
 
 		Collections.sort(points);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((board == null) ? 0 : board.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Board other = (Board) obj;
+		if (board == null) {
+			if (other.board != null)
+				return false;
+		} else if (!board.equals(other.board))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder buffer = new StringBuilder("Board:\n  WHITE:");
+		for (Point point : board.get(Player.WHITE))
+			buffer.append(" ").append(point.getPosition()).append("(").append(point.getStones()).append(")");
+		buffer.append("\n  BLACK:");
+		for (Point point : board.get(Player.BLACK))
+			buffer.append(" ").append(point.getPosition()).append("(").append(point.getStones()).append(")");
+		return buffer.toString();
 	}
 
 }

@@ -47,6 +47,37 @@ public class Point implements Comparable<Point> {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		result = prime * result + position;
+		result = prime * result + stones;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Point other = (Point) obj;
+		if (player == null) {
+			if (other.player != null)
+				return false;
+		} else if (!player.equals(other.player))
+			return false;
+		if (position != other.position)
+			return false;
+		if (stones != other.stones)
+			return false;
+		return true;
+	}
+
+	@Override
 	public String toString() {
 		return "Point: " + position + " " + player + " " + stones;
 	}
