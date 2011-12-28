@@ -99,13 +99,17 @@ public class Board {
 	public void move(Player player, Move move) throws RuleViolationException {
 		Point from = getPoint(player, move.getFrom());
 		Point to = getPoint(player, move.getTo());
+		List<Point> points = getPlayer(player);
 
 		if (from == null || from.getPlayer() != player || from.getStones() < 1)
 			throw new RuleViolationException("cannot move: player has no stone on from-field");
+		if (move.getFrom() < BAR && getBar(player) != null)
+			throw new RuleViolationException("move not allowed: player has stone(s) on bar");
+		if (move.getTo() == OFF && points.get(0).getPosition() > 6)
+			throw new RuleViolationException("move not allowed: player has stone(s) outside home");
 		if (to != null && to.getPlayer() != player && to.getStones() != 1)
 			throw new RuleViolationException("cannot move: opponent has 2 or more stones on to-field");
 
-		List<Point> points = getPlayer(player);
 		points.remove(from);
 		if (from.getStones() > 1) {
 			Point newFrom = new Point(from.getPosition(), from.getPlayer(), from.getStones() - 1);

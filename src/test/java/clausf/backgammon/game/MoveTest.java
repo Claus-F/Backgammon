@@ -147,4 +147,101 @@ public class MoveTest extends TestCase {
 		assertEquals(expected, board);
 	}
 
+	public void testRuleViolationBar() {
+		List<Point> white = new ArrayList<Point>();
+		white.add(new Point( 6, Player.WHITE, 5));
+		white.add(new Point( 4, Player.WHITE, 2));
+		white.add(new Point( 3, Player.WHITE, 5));
+		white.add(new Point( 2, Player.WHITE, 1));
+		white.add(new Point( 1, Player.WHITE, 2));
+
+		List<Point> black = new ArrayList<Point>();
+		black.add(new Point(25, Player.BLACK,  1));
+		black.add(new Point( 1, Player.BLACK,  3));
+		black.add(new Point( 0, Player.BLACK, 11));
+
+		Board board = new Board(white, black);
+
+		Moves moves = new Moves();
+		moves.addMove(new Move(1, 0));
+		moves.addMove(new Move(1, 0));
+
+		try {
+			board.move(Player.BLACK, moves);
+			fail("expected RuleViolationException");
+		} catch (RuleViolationException e) {
+			assertEquals(RuleViolationException.class, e.getClass());
+			assertEquals("move not allowed: player has stone(s) on bar", e.getMessage());
+			assertNull(e.getCause());
+		}
+
+	}
+
+	public void testRuleOkBar() throws RuleViolationException {
+		List<Point> white = new ArrayList<Point>();
+		white.add(new Point( 6, Player.WHITE, 5));
+		white.add(new Point( 4, Player.WHITE, 2));
+		white.add(new Point( 3, Player.WHITE, 5));
+		white.add(new Point( 2, Player.WHITE, 1));
+		white.add(new Point( 1, Player.WHITE, 2));
+
+		List<Point> black = new ArrayList<Point>();
+		black.add(new Point(25, Player.BLACK,  1));
+		black.add(new Point( 1, Player.BLACK,  3));
+		black.add(new Point( 0, Player.BLACK, 11));
+
+		Board board = new Board(white, black);
+
+		Moves moves = new Moves();
+		moves.addMove(new Move(25, 20));
+		moves.addMove(new Move(20, 18));
+
+		board.move(Player.BLACK, moves);
+
+		white = new ArrayList<Point>();
+		white.add(new Point( 6, Player.WHITE, 5));
+		white.add(new Point( 4, Player.WHITE, 2));
+		white.add(new Point( 3, Player.WHITE, 5));
+		white.add(new Point( 2, Player.WHITE, 1));
+		white.add(new Point( 1, Player.WHITE, 2));
+
+		black = new ArrayList<Point>();
+		black.add(new Point(18, Player.BLACK,  1));
+		black.add(new Point( 1, Player.BLACK,  3));
+		black.add(new Point( 0, Player.BLACK, 11));
+
+		Board expected = new Board(white, black);
+		assertEquals(expected, board);
+	}
+
+	public void testRuleViolationBarOff() {
+		List<Point> white = new ArrayList<Point>();
+		white.add(new Point( 6, Player.WHITE, 5));
+		white.add(new Point( 4, Player.WHITE, 2));
+		white.add(new Point( 3, Player.WHITE, 5));
+		white.add(new Point( 2, Player.WHITE, 1));
+		white.add(new Point( 1, Player.WHITE, 2));
+
+		List<Point> black = new ArrayList<Point>();
+		black.add(new Point(25, Player.BLACK,  1));
+		black.add(new Point( 1, Player.BLACK,  3));
+		black.add(new Point( 0, Player.BLACK, 11));
+
+		Board board = new Board(white, black);
+
+		Moves moves = new Moves();
+		moves.addMove(new Move(25, 20));
+		moves.addMove(new Move(1, 0));
+
+		try {
+			board.move(Player.BLACK, moves);
+			fail("expected RuleViolationException");
+		} catch (RuleViolationException e) {
+			assertEquals(RuleViolationException.class, e.getClass());
+			assertEquals("move not allowed: player has stone(s) outside home", e.getMessage());
+			assertNull(e.getCause());
+		}
+
+	}
+
 }
