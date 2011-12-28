@@ -43,6 +43,42 @@ public class MoveTest extends TestCase {
 		assertEquals(expected, board);
 	}
 
+	public void testOpeningExpectedWrongOrder() throws RuleViolationException {
+		Board board = new Board();
+
+		Point point = board.getPoint(Player.WHITE, 23);
+		assertNull(point);
+
+		Moves moves = new Moves();
+		moves.addMove(new Move(8, 5));
+		moves.addMove(new Move(24, 23));
+
+		board.move(Player.WHITE, moves);
+
+		point = board.getPoint(Player.WHITE, 23);
+		assertNotNull(point);
+		assertEquals(23, point.getPosition());
+		assertEquals(Player.WHITE, point.getPlayer());
+		assertEquals(1, point.getStones());
+
+		List<Point> white = new ArrayList<Point>();
+		white.add(new Point(24, Player.WHITE, 1));
+		white.add(new Point(13, Player.WHITE, 5)); // !! wrong order !!
+		white.add(new Point(23, Player.WHITE, 1)); // !! wrong order !!
+		white.add(new Point( 8, Player.WHITE, 2));
+		white.add(new Point( 6, Player.WHITE, 5));
+		white.add(new Point( 5, Player.WHITE, 1));
+
+		List<Point> black = new ArrayList<Point>();
+		black.add(new Point(24, Player.BLACK, 2));
+		black.add(new Point(13, Player.BLACK, 5));
+		black.add(new Point( 8, Player.BLACK, 3));
+		black.add(new Point( 6, Player.BLACK, 5));
+
+		Board expected = new Board(white, black);
+		assertEquals(expected, board);
+	}
+
 	public void testEndGame1() throws RuleViolationException {
 		List<Point> white = new ArrayList<Point>();
 		white.add(new Point( 3, Player.WHITE,  3));

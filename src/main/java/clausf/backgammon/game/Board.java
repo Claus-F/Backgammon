@@ -16,11 +16,11 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package clausf.backgammon.game;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Map.Entry;
 
 public class Board {
@@ -28,33 +28,33 @@ public class Board {
 	public static final int BAR = 25;
 	public static final int OFF = 0;
 
-	private Map<Player, List<Point>> board;
+	private Map<Player, Set<Point>> board;
 
 	public Board() {
-		List<Point> white = new ArrayList<Point>();
+		Set<Point> white = new TreeSet<Point>();
 		white.add(new Point(24, Player.WHITE, 2));
 		white.add(new Point(13, Player.WHITE, 5));
 		white.add(new Point( 8, Player.WHITE, 3));
 		white.add(new Point( 6, Player.WHITE, 5));
 
-		List<Point> black = new ArrayList<Point>();
+		Set<Point> black = new TreeSet<Point>();
 		black.add(new Point(24, Player.BLACK, 2));
 		black.add(new Point(13, Player.BLACK, 5));
 		black.add(new Point( 8, Player.BLACK, 3));
 		black.add(new Point( 6, Player.BLACK, 5));
 
-		board = new HashMap<Player, List<Point>>();
+		board = new HashMap<Player, Set<Point>>();
 		board.put(Player.WHITE, white);
 		board.put(Player.BLACK, black);
 	}
 
-	public Board(List<Point> white, List<Point> black) {
-		board = new HashMap<Player, List<Point>>();
-		board.put(Player.WHITE, white);
-		board.put(Player.BLACK, black);
+	public Board(Collection<Point> white, Collection<Point> black) {
+		board = new HashMap<Player, Set<Point>>();
+		board.put(Player.WHITE, new TreeSet<Point>(white));
+		board.put(Player.BLACK, new TreeSet<Point>(black));
 	}
 
-	public List<Point> getPlayer(Player player) {
+	public Set<Point> getPlayer(Player player) {
 		return board.get(player);
 	}
 
@@ -73,18 +73,18 @@ public class Board {
 	}
 
 	public Point getOff(Player player) {
-		List<Point> points = getPlayer(player);
-		Point point = points.get(points.size() - 1);
-		if (point.getPosition() == OFF)
-			return point;
+		Set<Point> points = getPlayer(player);
+		for (Point point : points)
+			if (point.getPosition() == OFF)
+				return point;
 		return null;
 	}
 
 	public Point getBar(Player player) {
-		List<Point> points = getPlayer(player);
-		Point point = points.get(0);
-		if (point.getPosition() == BAR)
-			return point;
+		Set<Point> points = getPlayer(player);
+		for (Point point : points)
+			if (point.getPosition() == BAR)
+				return point;
 		return null;
 	}
 
@@ -99,13 +99,13 @@ public class Board {
 	public void move(Player player, Move move) throws RuleViolationException {
 		Point from = getPoint(player, move.getFrom());
 		Point to = getPoint(player, move.getTo());
-		List<Point> points = getPlayer(player);
+		Set<Point> points = getPlayer(player);
 
 		if (from == null || from.getPlayer() != player || from.getStones() < 1)
 			throw new RuleViolationException("cannot move: player has no stone on from-field");
 		if (move.getFrom() < BAR && getBar(player) != null)
 			throw new RuleViolationException("move not allowed: player has stone(s) on bar");
-		if (move.getTo() == OFF && points.get(0).getPosition() > 6)
+		if (move.getTo() == OFF && points.iterator().next().getPosition() > 6)
 			throw new RuleViolationException("move not allowed: player has stone(s) outside home");
 		if (to != null && to.getPlayer() != player && to.getStones() != 1)
 			throw new RuleViolationException("cannot move: opponent has 2 or more stones on to-field");
@@ -126,7 +126,7 @@ public class Board {
 			points.add(newTo);
 		}
 		else {
-			List<Point> opponent = getPlayer(player.opponent());
+			Set<Point> opponent = getPlayer(player.opponent());
 			opponent.remove(to);
 			Point opponentBar = getPoint(player.opponent(), BAR);
 			if (opponentBar == null) {
@@ -138,13 +138,10 @@ public class Board {
 				Point newOpponent = new Point(BAR, player.opponent(), opponentBar.getStones() + 1);
 				opponent.add(newOpponent);
 			}
-			Collections.sort(opponent);
 
 			Point newTo = new Point(move.getTo(), player, 1);
 			points.add(newTo);
 		}
-
-		Collections.sort(points);
 	}
 
 	@Override
