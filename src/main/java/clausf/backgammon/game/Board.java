@@ -66,7 +66,7 @@ public class Board {
 		if (position == OFF || position == BAR)
 			return null;
 		for (Point point : board.get(player.opponent())) {
-			if (point.getPosition() == (25 - position))
+			if (point.getPosition() == (BAR - position))
 				return point;
 		}
 		return null;
@@ -173,10 +173,10 @@ public class Board {
 	public String toString() {
 		StringBuilder buffer = new StringBuilder("Board:\n  WHITE:");
 		for (Point point : board.get(Player.WHITE))
-			buffer.append(" ").append(point.getPosition()).append("(").append(point.getStones()).append(")");
+			buffer.append(" ").append(point.getPosition() == BAR ? "BAR" : (point.getPosition() == OFF) ? "OFF" : point.getPosition()).append("(").append(point.getStones()).append(")");
 		buffer.append("\n  BLACK:");
 		for (Point point : board.get(Player.BLACK))
-			buffer.append(" ").append(point.getPosition()).append("(").append(point.getStones()).append(")");
+			buffer.append(" ").append(point.getPosition() == BAR ? "BAR" : (point.getPosition() == OFF) ? "OFF" : point.getPosition()).append("(").append(point.getStones()).append(")");
 		return buffer.toString();
 	}
 

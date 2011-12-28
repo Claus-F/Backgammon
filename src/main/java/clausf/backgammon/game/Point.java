@@ -16,6 +16,9 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package clausf.backgammon.game;
 
+import static clausf.backgammon.game.Board.BAR;
+import static clausf.backgammon.game.Board.OFF;;
+
 public class Point implements Comparable<Point> {
 
 	private int position;
@@ -79,7 +82,7 @@ public class Point implements Comparable<Point> {
 
 	@Override
 	public String toString() {
-		return "Point: " + position + " " + player + " " + stones;
+		return "Point: " + (position == BAR ? "BAR" : (position == OFF) ? "OFF" : position) + " " + player + " " + stones;
 	}
 
 }
